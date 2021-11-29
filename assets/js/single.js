@@ -1,10 +1,28 @@
 var issueContainerEl = document.querySelector("#issues-container");
 var limitWarningEl = document.querySelector("#limit-warning");
+var repoNameEl = document.querySelector("#repo-name");
+
+// get query string
+var getRepoName = function() {
+    // get repo name from query string
+    var queryString = document.location.search;
+    var repoName = queryString.split("=")[1];
+
+    if (repoName) {
+        // display repo name on page
+        repoNameEl.textContent = repoName;
+
+        getRepoIssues(repoName);
+    } else {
+        // redirec to homepage
+        document.location.replace("./index.html");
+    }
+    
+}
 
 // fetch repo issues
 var getRepoIssues = function(repo) {
     var apiUrl = "https://api.github.com/repos/" + repo + "/issues?direction=asc";
-    console.log()
 
     fetch(apiUrl)
         .then(function(response) {
@@ -19,7 +37,7 @@ var getRepoIssues = function(repo) {
                     }
                 });
             } else {
-                alert("There was a problem with your request!");
+                document.location.replace("./index.html");
             }
         })
         .catch(function(error) {
@@ -83,4 +101,4 @@ var displayWarning = function(repo) {
     limitWarningEl.appendChild(linkEl);
 };
 
-getRepoIssues("expressjs/express");
+getRepoName();
